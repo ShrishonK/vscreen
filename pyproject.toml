@@ -1,0 +1,89 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vscreen"
+version = "0.1.0"
+description = "A reusable virtual screening and published-candidate audit pipeline"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+
+# Do not add to this list without asking. Every addition is a reproducibility
+# liability and one more thing to install inside an OSPool container.
+dependencies = [
+    # CLI and interface
+    "typer>=0.12",
+    "rich>=13.7",
+    # Config
+    "pydantic>=2.6",
+    "pyyaml>=6.0",
+    # Cheminformatics
+    "rdkit>=2024.3.1",
+    "meeko>=0.6",          # LGPL-2.1 — dependency only, never vendored
+    "posebusters>=0.3.1",
+    # Data and statistics
+    "pandas>=2.2",
+    "numpy>=1.26",
+    "scipy>=1.12",
+    "statsmodels>=0.14",
+    # Active learning surrogate
+    "scikit-learn>=1.4",
+    "lightgbm>=4.3",
+    # Interaction fingerprints
+    "prolif>=2.0",
+    "MDAnalysis>=2.7",
+    # Fetch
+    "requests>=2.31",
+    # Figures
+    "matplotlib>=3.8",
+]
+
+[project.optional-dependencies]
+# Installed via conda-forge in practice; listed here for completeness.
+#   conda install -c conda-forge openmm openmmforcefields openff-toolkit
+md = [
+    "openmm>=8.1",
+    "openmmforcefields>=0.12",
+    "openff-toolkit>=0.16",
+]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "pytest-mock>=3.12",
+    "ruff>=0.4",
+    "mypy>=1.9",
+]
+
+[project.scripts]
+vscreen = "vscreen.cli:app"
+
+# External binaries located at runtime by vscreen/tools.py. Never bundled.
+#   AutoDock Vina   conda install -c conda-forge vina
+#   GNINA           optional, https://github.com/gnina/gnina
+#   AiZynthFinder   pip install aizynthfinder[all]  (large; separate env is fine)
+
+[tool.setuptools.packages.find]
+include = ["vscreen*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "integration: requires an external binary; skipped when absent",
+    "slow: takes more than a few seconds",
+]
+addopts = "-q --strict-markers"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true

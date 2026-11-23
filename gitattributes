@@ -1,0 +1,26 @@
+# Normalize line endings: LF in the repository, native in the working copy.
+# Keeps file hashes stable across Windows, macOS and Linux, which matters
+# when this repository is archived for a DOI.
+* text=auto eol=lf
+
+# Windows-only scripts keep CRLF
+*.bat   text eol=crlf
+*.cmd   text eol=crlf
+*.ps1   text eol=crlf
+
+# Binary — never touch
+*.png   binary
+*.jpg   binary
+*.pdf   binary
+*.db    binary
+*.npy   binary
+*.pdbqt binary
+*.sdf   binary
+*.mol2  binary
+*.dcd   binary
+*.xtc   binary
+*.chk   binary
+
+# Collapse noisy diffs on generated and data files in review
+*.ipynb linguist-generated=true
+*.csv   diff=csv

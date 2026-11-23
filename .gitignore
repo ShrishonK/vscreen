@@ -1,0 +1,51 @@
+# Local agent / editor context — never committed
+CLAUDE.md
+AGENTS.md
+.claude/
+.cursor/
+.aider*
+.continue/
+.github/copilot-instructions.md
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+
+# Testing and tooling
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# vscreen project data — never commit run output
+*.db
+*.db-wal
+*.db-shm
+cache/
+logs/
+poses/
+md/
+ligands/
+reports/
+targets/*/receptor.pdbqt
+
+# Large inputs that should be fetched or documented, not committed
+*.sdf
+*.pdbqt
+*.dcd
+*.xtc
+*.chk
+
+# Exception: small committed test fixtures
+!tests/fixtures/**
+
+# OS
+.DS_Store
+Thumbs.db
