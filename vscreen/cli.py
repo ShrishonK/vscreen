@@ -7,6 +7,7 @@ graphical interface writes the same config and invokes the same runner.
 from __future__ import annotations
 
 import sys
+import tempfile
 from pathlib import Path
 from typing import Annotated
 
@@ -135,18 +136,61 @@ def status(
         console.print("[dim]no stage runs yet[/]")
 
 
+def _make_demo_scratch_project() -> Path:
+    """Create a fresh throwaway project under the system temp dir for `vscreen demo`.
+
+    `DemoStage` writes 50 synthetic compounds; running it inside a real project
+    would contaminate the corpus. The default is therefore a disposable
+    project that leaves no trace in the caller's directory.
+    """
+    scratch_root = Path(tempfile.mkdtemp(prefix="vscreen-demo-"))
+    project_dir = scratch_root / "demo"
+    project_dir.mkdir()
+    for sub in PROJECT_SUBDIRS:
+        (project_dir / sub).mkdir()
+    save_config(
+        ProjectConfig(name="demo-scratch", created_at=utc_now_iso(), seed=0),
+        project_dir / PROJECT_CONFIG_NAME,
+    )
+    with store.open_store(project_dir):
+        pass
+    return project_dir
+
+
 @app.command(hidden=True)
 def demo(
     items: Annotated[int, typer.Option(help="Number of fake items.")] = 50,
     sleep: Annotated[float, typer.Option(help="Seconds of fake work per item.")] = 0.15,
     plain: Annotated[bool, typer.Option("--plain", help="Force the plain reporter.")] = False,
+    here: Annotated[
+        bool,
+        typer.Option(
+            "--here",
+            help="Run inside the current project instead of a throwaway temp project.",
+        ),
+    ] = False,
     project: Annotated[
-        Path | None, typer.Option("--project", help="Project directory.", file_okay=False)
+        Path | None,
+        typer.Option("--project", help="Run inside this existing project.", file_okay=False),
     ] = None,
 ) -> None:
-    """Run DemoStage over fake items to exercise the dashboard and resume."""
+    """Run DemoStage over fake items to exercise the dashboard and resume.
+
+    By default `vscreen demo` creates a disposable project in a system temp
+    directory so its 50 synthetic compounds cannot contaminate a real corpus.
+    Pass `--here` (or `--project PATH`) to run it against an existing project.
+    """
+    scratch = False
     try:
-        root = find_project_root(project)
+        if here or project is not None:
+            root = find_project_root(project)
+        else:
+            root = _make_demo_scratch_project()
+            scratch = True
+            console.print(
+                f"[dim]using throwaway project at {root} "
+                f"(pass --here to run in the current project instead)[/]"
+            )
         config = load_config(root / PROJECT_CONFIG_NAME)
         configure_logging(root)
         stage = build_stage("demo", n_items=items, sleep_s=sleep)
@@ -156,7 +200,13 @@ def demo(
             with reporter:
                 outcome = StageRunner().run(stage, ctx)
     except KeyboardInterrupt:
-        console.print("\n[yellow]interrupted[/] — re-run `vscreen demo` to resume")
+        if scratch:
+            console.print(
+                "\n[yellow]interrupted[/] — the throwaway project at "
+                f"{root} is incomplete; delete it or re-run `vscreen demo --here --project {root}`"
+            )
+        else:
+            console.print("\n[yellow]interrupted[/] — re-run `vscreen demo` to resume")
         raise typer.Exit(code=130) from None
     except GpuUnavailable as exc:
         console.print(f"[yellow]{exc}[/]")

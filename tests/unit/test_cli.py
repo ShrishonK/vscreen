@@ -3,6 +3,7 @@ in the modules the commands call."""
 
 from __future__ import annotations
 
+import tempfile
 from pathlib import Path
 
 import pytest
@@ -124,6 +125,58 @@ def test_demo_outside_a_project_fails_cleanly(tmp_path: Path) -> None:
     result = runner.invoke(app, ["demo", "--project", str(tmp_path), "--items", "2"])
     assert result.exit_code == 1
     assert "vscreen init" in result.output
+
+
+def test_demo_default_uses_a_throwaway_project(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Default `vscreen demo` must not contaminate the project in the cwd."""
+    project = tmp_path / "real-project"
+    assert runner.invoke(app, ["init", "real-project", "--in", str(tmp_path)]).exit_code == 0
+    monkeypatch.chdir(project)
+    # Pin tempfile.mkdtemp's base dir; the TMPDIR env var is cached by tempfile
+    # after first use elsewhere in the test process.
+    scratch_home = tmp_path / "tmp-root"
+    scratch_home.mkdir()
+    monkeypatch.setattr(tempfile, "tempdir", str(scratch_home))
+
+    result = runner.invoke(app, ["demo", "--items", "2", "--sleep", "0", "--plain"])
+    assert result.exit_code == 0, result.output
+    assert "throwaway project at" in result.output
+    assert "2 executed this run" in result.output
+
+    # The real project in the cwd must be untouched.
+    with store.open_store(project) as conn:
+        counts = store.table_counts(conn)
+        assert counts["compounds"] == 0
+        assert counts["stage_runs"] == 0
+        assert counts["results"] == 0
+
+    # The throwaway project exists under the temp root and holds the demo output.
+    scratch_dirs = list(scratch_home.glob("vscreen-demo-*/demo"))
+    assert len(scratch_dirs) == 1, scratch_dirs
+    with store.open_store(scratch_dirs[0]) as conn:
+        counts = store.table_counts(conn)
+        assert counts["compounds"] == 2
+        assert counts["stage_runs"] == 1
+
+
+def test_demo_here_runs_in_the_current_project(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """`vscreen demo --here` opts into the current project."""
+    project = tmp_path / "here-project"
+    assert runner.invoke(app, ["init", "here-project", "--in", str(tmp_path)]).exit_code == 0
+    monkeypatch.chdir(project)
+
+    result = runner.invoke(app, ["demo", "--here", "--items", "3", "--sleep", "0", "--plain"])
+    assert result.exit_code == 0, result.output
+    assert "throwaway project at" not in result.output
+
+    with store.open_store(project) as conn:
+        counts = store.table_counts(conn)
+        assert counts["compounds"] == 3
+        assert counts["stage_runs"] == 1
 
 
 def test_stages_command_lists_the_registry() -> None:
