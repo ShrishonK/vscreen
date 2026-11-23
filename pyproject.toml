@@ -67,6 +67,12 @@ vscreen = "vscreen.cli:app"
 [tool.setuptools.packages.find]
 include = ["vscreen*"]
 
+# docs/SCHEMA.sql ships inside the package as vscreen/schema.sql, so an
+# installed wheel can create a database with no repository present.
+# tests/unit/test_schema.py asserts the two files stay byte-identical.
+[tool.setuptools.package-data]
+vscreen = ["schema.sql"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 markers = [
