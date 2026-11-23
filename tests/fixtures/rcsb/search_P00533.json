@@ -1,0 +1,9 @@
+{
+  "query_id": "fixture-P00533",
+  "result_type": "entry",
+  "total_count": 2,
+  "result_set": [
+    {"identifier": "4I22", "score": 1.0},
+    {"identifier": "1M17", "score": 1.0}
+  ]
+}

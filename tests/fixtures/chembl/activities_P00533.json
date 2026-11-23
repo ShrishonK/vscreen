@@ -1,0 +1,35 @@
+{
+  "activities": [
+    {
+      "molecule_chembl_id": "CHEMBL939",
+      "canonical_smiles": "COc1cc2ncnc(Nc3ccc(F)c(Cl)c3)c2cc1OCCCN1CCOCC1",
+      "pchembl_value": "8.1",
+      "standard_type": "IC50"
+    },
+    {
+      "molecule_chembl_id": "CHEMBL939",
+      "canonical_smiles": "COc1cc2ncnc(Nc3ccc(F)c(Cl)c3)c2cc1OCCCN1CCOCC1",
+      "pchembl_value": "7.9",
+      "standard_type": "IC50"
+    },
+    {
+      "molecule_chembl_id": "CHEMBL939",
+      "canonical_smiles": "COc1cc2ncnc(Nc3ccc(F)c(Cl)c3)c2cc1OCCCN1CCOCC1",
+      "pchembl_value": "8.3",
+      "standard_type": "Ki"
+    },
+    {
+      "molecule_chembl_id": "CHEMBL1173655",
+      "canonical_smiles": "C=CC(=O)Nc1cccc(Nc2ncnc3cc(OC)c(OC)cc23)c1",
+      "pchembl_value": "7.3",
+      "standard_type": "IC50"
+    },
+    {
+      "molecule_chembl_id": "CHEMBL53753",
+      "canonical_smiles": "COc1cc2ncnc(Nc3ccc(F)c(Cl)c3)c2cc1OC",
+      "pchembl_value": "7.7",
+      "standard_type": "IC50"
+    }
+  ],
+  "page_meta": {"limit": 1000, "offset": 0, "next": null, "total_count": 5}
+}

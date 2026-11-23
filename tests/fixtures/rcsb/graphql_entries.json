@@ -1,0 +1,47 @@
+{
+  "data": {
+    "entries": [
+      {
+        "rcsb_id": "4I22",
+        "struct": {"title": "EGFR KINASE DOMAIN WITH A BOUND INHIBITOR"},
+        "rcsb_entry_info": {
+          "resolution_combined": [1.80],
+          "experimental_method": "X-RAY DIFFRACTION"
+        },
+        "polymer_entities": [
+          {
+            "rcsb_polymer_entity_container_identifiers": {
+              "auth_asym_ids": ["A", "B"],
+              "reference_sequence_identifiers": [
+                {"database_name": "UniProt", "database_accession": "P00533"}
+              ]
+            }
+          }
+        ],
+        "nonpolymer_entities": [
+          {"pdbx_entity_nonpoly": {"comp_id": "ADP", "name": "ADENOSINE-5'-DIPHOSPHATE"}},
+          {"pdbx_entity_nonpoly": {"comp_id": "HOH", "name": "WATER"}}
+        ]
+      },
+      {
+        "rcsb_id": "1M17",
+        "struct": {"title": "EGFR KINASE DOMAIN APO"},
+        "rcsb_entry_info": {
+          "resolution_combined": [2.60],
+          "experimental_method": "X-RAY DIFFRACTION"
+        },
+        "polymer_entities": [
+          {
+            "rcsb_polymer_entity_container_identifiers": {
+              "auth_asym_ids": ["A"],
+              "reference_sequence_identifiers": [
+                {"database_name": "UniProt", "database_accession": "P00533"}
+              ]
+            }
+          }
+        ],
+        "nonpolymer_entities": []
+      }
+    ]
+  }
+}

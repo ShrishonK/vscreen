@@ -122,6 +122,11 @@ class Stage(ABC):
 
     name: ClassVar[str]
     requires: ClassVar[Requirements] = Requirements()
+    #: Whether this stage writes narrow ``Result`` rows per item.
+    #: Default True (compound-work stages); False for setup stages like
+    #: ``target_add`` that write to other tables and whose items wrote no
+    #: result rows by design (the orphan check would otherwise fire).
+    writes_results: ClassVar[bool] = True
 
     def config_subtree(self, ctx: Context) -> dict[str, Any]:
         """The config this stage's run key depends on."""
@@ -252,7 +257,11 @@ class StageRunner:
         }
         log.info("%s run %s %s: %s", stage.name, run.id, status, counts)
         reporter.emit(StageFinished(stage=stage.name, counts=counts))
-        orphans = store.items_done_without_results(ctx.conn, run.id)
+        orphans = (
+            store.items_done_without_results(ctx.conn, run.id)
+            if stage.writes_results
+            else []
+        )
         if orphans:
             reporter.emit(
                 Warning(

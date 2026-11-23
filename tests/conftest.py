@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import sqlite3
 from collections.abc import Iterator
 from pathlib import Path
@@ -19,9 +20,32 @@ from vscreen.config import (
     utc_now_iso,
 )
 from vscreen.events import CollectingReporter
+from vscreen.fetch.cache import DiskCache, offline_fetcher
 from vscreen.stages.base import Context
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+FIXTURES_ROOT = Path(__file__).resolve().parent / "fixtures"
+
+
+@pytest.fixture(autouse=True)
+def _force_offline(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Belt-and-braces: any cache built from the env must refuse to fetch (rule: no network)."""
+    monkeypatch.setenv("VSCREEN_OFFLINE", "1")
+
+
+@pytest.fixture
+def offline_cache(project_dir: Path) -> DiskCache:
+    """A ``DiskCache`` wired to the offline fetcher. Tests prime it per call."""
+    return DiskCache(project_dir / "cache", fetcher=offline_fetcher)
+
+
+def load_fixture_json(relative_path: str) -> object:
+    """Read a fixture JSON payload. Fixtures live in ``tests/fixtures/``."""
+    return json.loads((FIXTURES_ROOT / relative_path).read_text(encoding="utf-8"))
+
+
+def load_fixture_text(relative_path: str) -> str:
+    return (FIXTURES_ROOT / relative_path).read_text(encoding="utf-8")
 
 
 @pytest.fixture(autouse=True)

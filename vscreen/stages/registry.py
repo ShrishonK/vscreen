@@ -11,6 +11,7 @@ from typing import Any
 from ..errors import StageError, UnknownStage
 from .base import Stage
 from .demo import DemoStage
+from .target_add import TargetAddStage
 
 __all__ = ["STAGES", "register", "get_stage_class", "build_stage", "stage_names"]
 
@@ -49,3 +50,4 @@ def stage_names() -> tuple[str, ...]:
 
 
 register(DemoStage)
+register(TargetAddStage)

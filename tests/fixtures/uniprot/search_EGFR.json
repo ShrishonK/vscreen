@@ -1,0 +1,26 @@
+{
+  "results": [
+    {
+      "primaryAccession": "P00533",
+      "sequence": {"length": 1210},
+      "proteinDescription": {
+        "recommendedName": {
+          "fullName": {"value": "Epidermal growth factor receptor"}
+        }
+      },
+      "genes": [{"geneName": {"value": "EGFR"}}],
+      "organism": {"scientificName": "Homo sapiens"}
+    },
+    {
+      "primaryAccession": "Q01279",
+      "sequence": {"length": 1210},
+      "proteinDescription": {
+        "recommendedName": {
+          "fullName": {"value": "Epidermal growth factor receptor"}
+        }
+      },
+      "genes": [{"geneName": {"value": "Egfr"}}],
+      "organism": {"scientificName": "Mus musculus"}
+    }
+  ]
+}

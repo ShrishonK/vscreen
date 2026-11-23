@@ -1,0 +1,16 @@
+{
+  "targets": [
+    {
+      "target_chembl_id": "CHEMBL203",
+      "pref_name": "Epidermal growth factor receptor erbB1",
+      "target_type": "SINGLE PROTEIN",
+      "organism": "Homo sapiens"
+    },
+    {
+      "target_chembl_id": "CHEMBL2363049",
+      "pref_name": "ErbB complex",
+      "target_type": "PROTEIN COMPLEX",
+      "organism": "Homo sapiens"
+    }
+  ]
+}

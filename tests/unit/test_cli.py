@@ -182,7 +182,9 @@ def test_demo_here_runs_in_the_current_project(
 def test_stages_command_lists_the_registry() -> None:
     result = runner.invoke(app, ["stages"])
     assert result.exit_code == 0
-    assert result.output.strip() == "demo"
+    names = result.output.split()
+    assert "demo" in names
+    assert "target_add" in names
 
 
 def test_no_arguments_shows_help() -> None:

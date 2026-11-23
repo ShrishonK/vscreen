@@ -28,8 +28,8 @@ Update this table as phases land, so the next session knows what exists.
 
 | Phase | Status | Commit |
 |---|---|---|
-| 0 | complete | pending review, not committed |
-| 1 | not started | |
+| 0 | complete | e9ecd97 |
+| 1 | complete | pending review, not committed |
 | 2 | not started | |
 | 3 | not started | |
 | 4 | not started | |

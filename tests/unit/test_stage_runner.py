@@ -312,7 +312,7 @@ def test_worker_override_wins(ctx: Context) -> None:
 
 
 def test_registry_knows_the_demo_stage() -> None:
-    assert stage_names() == ("demo",)
+    assert "demo" in stage_names()
     assert get_stage_class("demo") is DemoStage
     assert isinstance(build_stage("demo", n_items=3, sleep_s=0.0), DemoStage)
 
